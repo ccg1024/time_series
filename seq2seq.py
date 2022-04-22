@@ -62,7 +62,7 @@ class Encoder(nn.Module):
         return output_tensor, (hn, cn)
 
     def initHidden(self, batch_size):
-        return torch.zeros(batch_size, self.layer_num, self.hidden_size, device=device)
+        return torch.zeros(self.layer_num, batch_size, self.hidden_size, device=device)
 
 
 class Decoder(nn.Module):
@@ -70,16 +70,15 @@ class Decoder(nn.Module):
     Note: the input_size is equal to target_tensor!
     """
 
-    def __init__(self, input_size, hidden_size, layer_num=2, dropout=0., batch_first=True) -> None:
+    def __init__(self, input_size, hidden_size, layer_num=2, dropout=0.) -> None:
         super(Decoder, self).__init__()
 
         self.input_size = input_size
         self.hidden_size = hidden_size
         self.layer_num = layer_num
-        self.batch_first = batch_first
 
         self.lstm = nn.LSTM(self.input_size, self.hidden_size, self.layer_num,
-                            dropout=dropout, batch_first=self.batch_first)
+                            dropout=dropout)
 
     def forward(self, input_tensor, short_term, long_term):
         output_tensor, (hn, cn) = self.lstm(input_tensor, (short_term, long_term))
@@ -100,9 +99,8 @@ class Seq2seq(nn.Module):
     def forward(self, input_tensor, target_tensor):
         h0 = self.encoder.initHidden(self.batch_size)
         encode_output, (encoder_hn, encoder_cn) = self.encoder(input_tensor, (h0, h0))
-        # decoder_output, (decoder_hn, decoder_cn) = self.decoder(target_tensor, (encoder_hn, encoder_cn))
-        decoder_output, (_, _) = self.decoder(target_tensor, (encoder_hn, encoder_cn))
+        _, (decoder_h, _) = self.decoder(target_tensor, (encoder_hn, encoder_cn))
 
-        output_tensor = self.linear(decoder_output)
+        output_tensor = self.linear(decoder_h)
 
         return output_tensor
