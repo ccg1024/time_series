@@ -1,6 +1,7 @@
 /datas
 /tests
 /.idea
-/DS_Store
+
+.DS_Store
 
 pyrightconfig.json
