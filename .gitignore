@@ -1,6 +1,6 @@
-./datas
-./tests
-./.idea
-./DS_Store
+/datas
+/tests
+/.idea
+/DS_Store
 
-./pyrightconfig.json
+pyrightconfig.json
