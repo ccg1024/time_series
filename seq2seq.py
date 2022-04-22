@@ -31,6 +31,9 @@ EXAMPLE
 >>> output, (hn, cn) = lstm(input, (h0, c0))
 
 the code just use 2 layer LSTM for each encoder and decoder.
+why need initial multilayer hadden state -> the h_t is the output of a lstm layer
+so, the first layer of lstm will put its h_t as a output, and the seconde lstm layer
+will use this output as its input, and the seconde lstm layer also need a h_0.
 """
 
 import torch
