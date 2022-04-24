@@ -98,8 +98,8 @@ class Seq2seq(nn.Module):
 
     def forward(self, input_tensor, target_tensor):
         h0 = self.encoder.initHidden(self.batch_size)
-        _, (encoder_hn, encoder_cn) = self.encoder(input_tensor, (h0, h0))
-        _, (decoder_h, _) = self.decoder(target_tensor, (encoder_hn, encoder_cn))
+        _, (encoder_hn, encoder_cn) = self.encoder(input_tensor, h0, h0)
+        _, (decoder_h, _) = self.decoder(target_tensor, encoder_hn, encoder_cn)
 
         output_tensor = self.linear(decoder_h[-1])
 
