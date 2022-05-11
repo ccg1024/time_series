@@ -44,10 +44,17 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 class Encoder(nn.Module):
     """
-    the default shape is (batch, seq, feature)
+    the default shape is (seq, batch, feature)
     """
 
     def __init__(self, input_size, hidden_size, layer_num=2, dropout=0.) -> None:
+        """
+
+        :param input_size:  the feature number of X, equal to X.shape[-1].
+        :param hidden_size: the feature number of hidden layer.
+        :param layer_num:   the layer number of LSTM.
+        :param dropout:     dropout rate.
+        """
         super(Encoder, self).__init__()
 
         self.input_size = input_size
@@ -71,6 +78,13 @@ class Decoder(nn.Module):
     """
 
     def __init__(self, input_size, hidden_size, layer_num=2, dropout=0.) -> None:
+        """
+
+        :param input_size:  the feature number of y, equal to y.shape[-1]
+        :param hidden_size: the feature number of hidden layer.
+        :param layer_num:   the layer number of LSTM.
+        :param dropout:     dropout rate.
+        """
         super(Decoder, self).__init__()
 
         self.input_size = input_size
@@ -87,6 +101,13 @@ class Decoder(nn.Module):
 
 class Seq2seq(nn.Module):
     def __init__(self, encoder, decoder, hidden_size, batch_size):
+        """
+
+        :param encoder:     encoder instance.
+        :param decoder:     decoder instance.
+        :param hidden_size: the hidden size of decoder.
+        :param batch_size:  batch_size of input data.
+        """
         super(Seq2seq, self).__init__()
 
         self.encoder = encoder
