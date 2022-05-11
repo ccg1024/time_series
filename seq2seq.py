@@ -39,8 +39,6 @@ will use this output as its input, and the seconde lstm layer also need a h_0.
 import torch
 import torch.nn as nn
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
 
 class Encoder(nn.Module):
     """
@@ -69,7 +67,7 @@ class Encoder(nn.Module):
         return output_tensor, (hn, cn)
 
     def initHidden(self, batch_size):
-        return torch.zeros(self.layer_num, batch_size, self.hidden_size, device=device)
+        return torch.zeros(self.layer_num, batch_size, self.hidden_size)
 
 
 class Decoder(nn.Module):
@@ -117,8 +115,8 @@ class Seq2seq(nn.Module):
 
         self.linear = nn.Linear(self.hidden_size, 1)
 
-    def forward(self, input_tensor, target_tensor):
-        h0 = self.encoder.initHidden(self.batch_size)
+    def forward(self, input_tensor, target_tensor, device='cpu'):
+        h0 = self.encoder.initHidden(self.batch_size).to(device)
         _, (encoder_hn, encoder_cn) = self.encoder(input_tensor, h0, h0)
         _, (decoder_h, _) = self.decoder(target_tensor, encoder_hn, encoder_cn)
 
