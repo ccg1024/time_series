@@ -151,7 +151,7 @@ class NativePeepholeLSTM(nn.Module):
     """
     simple test, the output shape is as same as the original LSTM.
     """
-    def __init__(self, input_size: int, hidden_size: int) -> None:
+    def __init__(self, input_size: int, hidden_size: int, output_size: int) -> None:
         super().__init__()
 
         self.input_size = input_size
@@ -182,6 +182,8 @@ class NativePeepholeLSTM(nn.Module):
         
         # initial weights of model.
         self.init_weights()
+
+        self.fc = nn.Linear(hidden_size, output_size)
 
     # default initial function of lstm in pytorch.
     def init_weights(self):
@@ -222,4 +224,6 @@ class NativePeepholeLSTM(nn.Module):
         # reshape
         hidden_outputs = torch.cat(hidden_outputs, dim=0).transpose(0, 1).contiguous()
 
-        return hidden_outputs, (h_t, c_t)
+        predict = self.fc(h_t)
+
+        return hidden_outputs, (h_t, c_t), predict
