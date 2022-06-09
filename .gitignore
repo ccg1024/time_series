@@ -2,6 +2,7 @@
 /tests
 /.idea
 /__pycache__
+/model/__pycache__
 
 .DS_Store
 

@@ -9,6 +9,9 @@ import torch
 import torch.nn as nn
 
 
+__all__ = ['NaiveCustomLSTM', 'NativePeepholeLSTM']
+
+
 class NaiveCustomLSTM(nn.Module):
     def __init__(self, input_size: int, hidden_size: int):
         super().__init__()
