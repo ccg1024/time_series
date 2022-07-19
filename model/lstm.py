@@ -11,10 +11,8 @@ initial once for each iteration. Or just need account for some other reason to
 choose which time need to initial the hidden state and the cell state.
 """
 
-
 from typing import Optional, Tuple
 import torch
-from torch.functional import Tensor
 import torch.nn as nn
 
 
@@ -22,12 +20,13 @@ class LSTM(nn.Module):
     """
     The tensor shape of this calss is (seq_len, batch_size, features)
     """
-    def __init__(self,n_input, n_output, n_hidden=51, n_layer=1) -> None:
+
+    def __init__(self, n_input, n_output, n_hidden=51, n_layer=1) -> None:
         """
-        :param n_input:  the feature number of input tensor.
-        :param n_output: the feature number of output tensor.
-        :param n_input:  the feature number of hidden layer.
-        :param n_input:  the number of lstm layer.
+        : param n_input  : the feature number of input tensor.
+        : param n_output : the feature number of output tensor.
+        : param n_input  : the feature number of hidden layer.
+        : param n_input  : the number of lstm layer.
         """
         super().__init__()
         self.n_hidden = n_hidden
@@ -38,12 +37,17 @@ class LSTM(nn.Module):
     def initHidden(self, batch_size):
         return torch.zeros(self.n_layer, batch_size, self.n_hidden)
 
-    def forward(self, x: Tensor, hx: Optional[Tuple[Tensor, Tensor]]=None) -> Tensor:
+    def forward(self, x: torch.Tensor, hx: Optional[Tuple[torch.Tensor, torch.Tensor]] = None) -> torch.Tensor:
+        """
+        : param x  : the input tensor.
+        : param hx : tuple of hidden stats.
+        """
+
         assert hx is not None, "need initHidden parameters"
-        _, (h_t, _) = self.lstm(x, hx)
+        _, (h_t, c_t) = self.lstm(x, hx)
         # the shape of h_t is (n_layer, batch_size, hidden_feature)
         # so we need the hidden state of last layer.
-        return self.fc(h_t[-1])
+        return self.fc(h_t[-1]), (h_t, c_t)
 
     def forward_(self, x, future=0):
         """
@@ -68,4 +72,3 @@ class LSTM(nn.Module):
 
         outputs = torch.cat(outputs, dim=1)
         return outputs
-
