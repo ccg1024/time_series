@@ -38,6 +38,7 @@ will use this output as its input, and the seconde lstm layer also need a h_0.
 
 import torch
 import torch.nn as nn
+from torch import Tensor
 
 
 class Encoder(nn.Module):
@@ -45,7 +46,8 @@ class Encoder(nn.Module):
     the default shape is (seq, batch, feature)
     """
 
-    def __init__(self, input_size, hidden_size, layer_num=2, dropout=0.) -> None:
+    def __init__(self, input_size: int, hidden_size: int, batch_size: int = 1, layer_num: int = 2,
+                 dropout: float = 0.) -> None:
         """
 
         :param input_size:  the feature number of X, equal to X.shape[-1].
@@ -58,15 +60,28 @@ class Encoder(nn.Module):
         self.input_size = input_size
         self.hidden_size = hidden_size
         self.layer_num = layer_num
+        self.batch_size = batch_size
 
         self.lstm = nn.LSTM(self.input_size, self.hidden_size, self.layer_num,
                             dropout=dropout)
 
-    def forward(self, input_tensor, short_term, long_term):
+    def forward(self, input_tensor: Tensor, short_term: Tensor = None, long_term: Tensor = None):
+        """
+
+        : param input_tensor   : training input, shape (seq, batch, features)
+        : param short_term     : the hidden states, shape (layer_num, batch_size, hidden_features)
+        : param long_term      : the cell states, shape (layer_num, batch_size, hidden_features)
+        : return output_tensor : each seq outputs of last lstm layer.
+        : return (hn, cn)      : last seq's hidden states and cell states of last lstm layer
+        """
+        # for test
+        if short_term == None or long_term == None:
+            short_term = long_term = self.initHidden(self.batch_size)
+
         output_tensor, (hn, cn) = self.lstm(input_tensor, (short_term, long_term))
         return output_tensor, (hn, cn)
 
-    def initHidden(self, batch_size):
+    def initHidden(self, batch_size: int):
         return torch.zeros(self.layer_num, batch_size, self.hidden_size)
 
 
@@ -75,7 +90,7 @@ class Decoder(nn.Module):
     Note: the input_size is equal to target_tensor!
     """
 
-    def __init__(self, input_size, hidden_size, layer_num=2, dropout=0.) -> None:
+    def __init__(self, input_size: int, hidden_size: int, layer_num: int = 2, dropout: float = 0.) -> None:
         """
 
         :param input_size:  the feature number of y, equal to y.shape[-1]
@@ -92,7 +107,7 @@ class Decoder(nn.Module):
         self.lstm = nn.LSTM(self.input_size, self.hidden_size, self.layer_num,
                             dropout=dropout)
 
-    def forward(self, input_tensor, short_term, long_term):
+    def forward(self, input_tensor: Tensor, short_term: Tensor, long_term: Tensor):
         output_tensor, (hn, cn) = self.lstm(input_tensor, (short_term, long_term))
         return output_tensor, (hn, cn)
 
@@ -115,7 +130,7 @@ class Seq2seq(nn.Module):
 
         self.linear = nn.Linear(self.hidden_size, 1)
 
-    def forward(self, input_tensor, target_tensor, device='cpu'):
+    def forward(self, input_tensor: Tensor, target_tensor: Tensor, device='cpu'):
         h0 = self.encoder.initHidden(self.batch_size).to(device)
         _, (encoder_hn, encoder_cn) = self.encoder(input_tensor, h0, h0)
         _, (decoder_h, _) = self.decoder(target_tensor, encoder_hn, encoder_cn)
