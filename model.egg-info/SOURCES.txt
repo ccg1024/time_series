@@ -1,0 +1,13 @@
+README.md
+setup.py
+model/__init__.py
+model/lstm.py
+model/manual_lstm.py
+model/seq2seq.py
+model.egg-info/PKG-INFO
+model.egg-info/SOURCES.txt
+model.egg-info/dependency_links.txt
+model.egg-info/top_level.txt
+tests/__init__.py
+tests/test_lstm.py
+tests/test_seq.py

@@ -38,7 +38,7 @@ will use this output as its input, and the seconde lstm layer also need a h_0.
 
 import torch
 import torch.nn as nn
-from torch import Tensor
+from torch import Tensor, device
 
 
 class Encoder(nn.Module):
