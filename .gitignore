@@ -3,6 +3,7 @@
 /.idea
 /__pycache__
 /model/__pycache__
+/.vimsession
 
 .DS_Store
 
