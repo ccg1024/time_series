@@ -8,9 +8,9 @@ import pandas as pd
 import torch
 import torch.nn as nn
 import torch.optim as optim
-import seq2seq
 import random
 import matplotlib.pyplot as plt
+from model import seq2seq
 
 
 class CustomDataset(Dataset):
