@@ -195,5 +195,5 @@ class Seq2Seq(nn.Module):
 
         _, (decoder_hn, _) = self.decoder(target_tensor, encoder_hn, encoder_cn)
         outputs = self.linear(decoder_hn[-1])
-        return outputs, encoder_hn, encoder_cn
+        return outputs, encoder_hn.detach(), encoder_cn.detach()
 

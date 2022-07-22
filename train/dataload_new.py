@@ -52,7 +52,7 @@ for epoch in range(epochs):
         # print(target_val)
 
         # train
-        prediction, hn, cn = s2s(encoder_input, decoder_input, hn, cn)
+        prediction, _, _ = s2s(encoder_input, decoder_input, hn, cn)
 
         optimizer.zero_grad()
         loss = loss_fn(prediction.to("cpu"), target_val)
