@@ -2,7 +2,7 @@
 """
 training time series model, and compare the accuracy.
 """
-import seq2seq
+from model import seq2seq
 import torch
 import torch.nn as nn
 import torch.optim as optim

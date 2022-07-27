@@ -38,7 +38,7 @@ will use this output as its input, and the seconde lstm layer also need a h_0.
 
 import torch
 import torch.nn as nn
-from torch import Tensor, device
+from torch import Tensor
 
 
 class Encoder(nn.Module):
@@ -112,7 +112,7 @@ class Decoder(nn.Module):
         return output_tensor, (hn, cn)
 
 
-class Seq2seq(nn.Module):
+class Seq2seq__(nn.Module):
     """
     need remake. See class Seq2Seq
     """
@@ -124,7 +124,7 @@ class Seq2seq(nn.Module):
         :param hidden_size: the hidden size of decoder.
         :param batch_size:  batch_size of input data.
         """
-        super(Seq2seq, self).__init__()
+        super(Seq2seq__, self).__init__()
 
         self.encoder = encoder
         self.decoder = decoder
@@ -163,7 +163,7 @@ class Seq2Seq(nn.Module):
         : param dropout_de  : decoder dropout rate.
         : param device      : training device, cpu or cuda.
         """
-        super(Seq2Seq, self).__init__()
+        super().__init__()
         self.input_size = input_size
         self.hidden_size = hidden_size
         self.target_size = target_size
@@ -195,7 +195,5 @@ class Seq2Seq(nn.Module):
 
         _, (decoder_hn, _) = self.decoder(target_tensor, encoder_hn, encoder_cn)
         outputs = self.linear(decoder_hn[-1])
-
-        return outputs
-
+        return outputs, encoder_hn.detach(), encoder_cn.detach()
 

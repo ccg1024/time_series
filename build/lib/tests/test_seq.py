@@ -1,6 +1,3 @@
-import sys
-sys.path.append("/home/william/CodePlace/Python/pytorch/time_series/")
-sys.path.insert(1, str('..'))
 import torch
 from model import seq2seq
 

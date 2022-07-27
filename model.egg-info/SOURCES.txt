@@ -9,5 +9,6 @@ model.egg-info/SOURCES.txt
 model.egg-info/dependency_links.txt
 model.egg-info/top_level.txt
 tests/__init__.py
+tests/test_data.py
 tests/test_lstm.py
 tests/test_seq.py
