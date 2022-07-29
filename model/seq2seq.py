@@ -39,6 +39,7 @@ will use this output as its input, and the seconde lstm layer also need a h_0.
 import torch
 import torch.nn as nn
 from torch import Tensor
+from self_attention import SelfAttention
 
 
 class Encoder(nn.Module):
@@ -181,7 +182,7 @@ class Seq2Seq(nn.Module):
         self.linear = nn.Linear(self.hidden_size, self.output_size).to(device)
 
     def forward(self, input_tensor: Tensor, target_tensor: Tensor, short_term: Tensor = None,
-                long_term: Tensor = None) -> Tensor:
+                long_term: Tensor = None, att: bool = False) -> Tensor:
         """
 
         :param input_tenser: dataset input X.
@@ -189,9 +190,13 @@ class Seq2Seq(nn.Module):
         :param short_term: hidden states of encoder.
         :param long_term: cell states of encoder.
         """
-        _, (encoder_hn, encoder_cn) = self.encoder(input_tensor, short_term, long_term, device=self.device)
+        encoder_outputs, (encoder_hn, encoder_cn) = self.encoder(input_tensor, short_term, long_term, device=self.device)
 
         # TODO: add attention code.
+        if att :
+            # the encoder_outputs shape: (seq, batch, feature)
+            # reshape to (batch, seq, feature)
+            encoder_outputs = encoder_outputs.transpose(0, 1)
 
         _, (decoder_hn, _) = self.decoder(target_tensor, encoder_hn, encoder_cn)
         outputs = self.linear(decoder_hn[-1])
