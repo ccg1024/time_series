@@ -1,6 +1,8 @@
 """
 training model by patched data object.
 """
+import sys
+sys.path.append("/home/william/CodePlace/Python/pytorch/time_series")
 import numpy as np
 from torch.utils.data import Dataset
 from torch.utils.data.dataloader import DataLoader

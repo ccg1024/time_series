@@ -1,0 +1,4 @@
+{
+    "extraPaths": [".", "./model"],
+    "pythonPlatform": "Linux"
+}

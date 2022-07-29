@@ -2,6 +2,8 @@
 """
 training time series model, and compare the accuracy.
 """
+import sys
+sys.path.append("/home/william/CodePlace/Python/pytorch/time_series")
 from model import seq2seq
 import torch
 import torch.nn as nn

@@ -4,6 +4,8 @@ using moving windows
 @data: flights.csv
 @date: 2022/7/22
 """
+import sys
+sys.path.append("/home/william/CodePlace/Python/pytorch/time_series")
 import numpy as np
 import pandas as pd
 import torch
