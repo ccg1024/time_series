@@ -3,9 +3,15 @@ most is same for dataload_new.py
 not using moving windows, just one sequence to one target.
 @data: flights.csv
 @date: 2022/7/26
-"""
-import sys
-sys.path.append("/home/william/CodePlace/Python/pytorch/time_series")
+
+just run in terminal python -m train.dataload_new2
+
+there some new error, in plt.savefig(path), the path can not be a absolute path.
+may like pyright config file, just search current workspace. So if need run in
+pycharm, need change some file path.
+
+Interestingly, the pd.read_csv() can work fine with absolute path.
+."""
 import numpy as np
 import pandas as pd
 import torch
@@ -24,7 +30,7 @@ one_hot_data = pd.get_dummies(file_dat.iloc[:, 1:])
 
 
 def normalization(sample_value, min_val, max_val):
-    val_rang = max_val - min_val;
+    val_rang = max_val - min_val
     return (sample_value - min_val) / val_rang
 
 
@@ -45,8 +51,10 @@ test_dat = np_dat[test_split:]
 device = "cuda" if torch.cuda.is_available() else "cpu"
 print("current training device: ", device)
 
-s2s = seq2seq.Seq2Seq(12, 50, 1, 1, 1,layer_num=1, device=device)
-epochs = 100
+s2s = seq2seq.Seq2Seq(12, 50, 1, 1, 1, layer_num=1, device=device)
+epochs = 1
+print("Total number of iterations: ", epochs)
+
 loss_fn = nn.MSELoss()
 optimizer = optim.Adam(s2s.parameters(), lr=0.001)
 
@@ -97,14 +105,14 @@ plt.plot(np.arange(len(last_train)), last_train, color="black", label="predic")
 norm_np_train = normalization(np_train_dat, min_val, max_val)
 plt.plot(np.arange(len(norm_np_train)), norm_np_train, color="r", label='true')
 plt.legend()
-plt.savefig("../tests/nom_predict.png")
+plt.savefig("./tests/nom_predict.png")
 plt.close()
 
 renom_predit = renormalization(last_train, min_val, max_val)
 plt.plot(np.arange(len(renom_predit)), renom_predit, color='black', label='predict')
 plt.plot(np.arange(len(np_train_dat)), np_train_dat, color='r', label='true')
 plt.legend()
-plt.savefig("../tests/renom_predict.png")
+plt.savefig("./tests/renom_predict.png")
 
 # test
 test_input_data = train_dat[-1:]
@@ -147,5 +155,5 @@ plt.close()
 plt.plot(np.arange(len(test_cord)), test_cord, color='black', label="predict")
 plt.plot(np.arange(len(future_cord)), future_cord, color='r', label='true')
 plt.legend()
-plt.savefig("../tests/renom_test.png")
+plt.savefig("./tests/renom_test.png")
 
