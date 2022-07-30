@@ -26,26 +26,35 @@ from torch import Tensor
 
 class SelfAttention(nn.Module):
     # TODO: maybe need add other input dim.
-    def __init__(self, input_dim: int, q_dim: int, k_dim: int = -1, v_dim: int = -1) -> None:
+    """
+    According Paper: Attention is all your need. The source of q can be different from k, v.
+    """
+    def __init__(self, input_dim: int, q_dim: int, k_dim: int = -1, v_dim: int = -1,
+                 input_qdim: int = -1) -> None:
         """
-        usually, the dimension of q is equal to v.
+        usually, the dimension of q is equal to k. Since we need to do dot-product with q, k.
+        the dimension of v can be different from q, k.
 
         ARGS
         ____
 
-        : param input_dim : the dimension of input vector. Like the example above.
-        : param q_dim     : the dimension of q vector.
-        : param k_dim     : the dimension of k vector. Default is -1, means equal to the dimension of q.
-        : param v_dim     : the dimension of v vector. Default is -1, means equal to the dimension of q.
+        : param input_dim  : the dimension of input vector. Like the example above.
+        : param q_dim      : the dimension of q vector.
+        : param k_dim      : the dimension of k vector. Default is -1, means equal to the dimension of q.
+        : param v_dim      : the dimension of v vector. Default is -1, means equal to the dimension of q.
+        : param input_qdim : the dimension of the source of q. Default is -1, means equal to `input_dim`.
         """
         super().__init__()
         self.q_dim = q_dim
         self.k_dim = q_dim if k_dim == -1 else k_dim
         self.v_dim = q_dim if v_dim == -1 else v_dim
+        self.input_qdim = input_dim if input_qdim == -1 else input_qdim
+
+        assert self.q_dim == self.k_dim, "[E] The dimension of q, k is different."
 
         # Notice here, the bias need to set false.
         # Just need the weight matrix
-        self.W_Q = nn.Linear(input_dim, self.q_dim, bias=False)
+        self.W_Q = nn.Linear(self.input_qdim, self.q_dim, bias=False)
         self.W_K = nn.Linear(input_dim, self.k_dim, bias=False)
         self.W_V = nn.Linear(input_dim, self.v_dim, bias=False)
 
